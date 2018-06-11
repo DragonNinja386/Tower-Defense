@@ -6,8 +6,10 @@ import javax.swing.JLabel;
 
 public class Tower {
 	private TowerRange rangeVisual;
-	private Projectile projectile;
+	private String projectile;
 	private int diameter;
+	private int speed;
+	private int cooldown;
 	
 	private int cost;
 	private String image;
@@ -15,16 +17,37 @@ public class Tower {
 	public Tower(String tower) {
 		switch (tower) {
 		case "Arrow":
-			diameter = 5;
+			speed = 5;
+			cooldown = 0;
+			cost = 25;
+			diameter = 15;
 			image = "src\\assets\\tower_arrow.png";
-			projectile = new Projectile("src\\assets\\arrow.png");
+			projectile = "src\\assets\\arrow.png";
 			break;
 		}
 		
 		
 		rangeVisual = new TowerRange(diameter);
-		
-		cost = 25;
+	}
+	
+	public void setCooldown() {
+		cooldown = speed;
+	}
+	
+	public int cooldown() {
+		if (cooldown > 0) {
+			cooldown--;
+		}
+		return cooldown;
+	}
+	
+	public Projectile getProjectile(Enemy e) {
+		Projectile temp = new Projectile(projectile, e);
+		return temp;
+	}
+	
+	public boolean getCooldown() {
+		return cooldown == 0;
 	}
 	
 	public int getRadius() {

@@ -40,7 +40,7 @@ public class GameControl {
 		
 		currentAction = null;
 
-		gameTimer = new Timer(20, new ActionListener() {
+		gameTimer = new Timer(/*20*/100, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				tick();

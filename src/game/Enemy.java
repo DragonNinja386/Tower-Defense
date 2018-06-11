@@ -24,6 +24,14 @@ public class Enemy extends JLabel {
 		image = "src\\assets\\enemyTest.png";
 	}
 	
+	public void hit(int damage) {
+		health -= damage;
+		
+		if (health <= damage) {
+			//TODO DO SOMETHING YOU IDIOT
+		}
+	}
+	
 	public String getImage() {
 		return image;
 	}

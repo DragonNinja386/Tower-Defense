@@ -193,37 +193,47 @@ public class GamePanel extends JLayeredPane {
 				}
 			}
 			
-			for (Grid g  : towers) {
+			for (Grid g : towers) {
 				Tower t = g.getTower();
-				int towerRadius = t.getRadius();
-				int enemyRadius = (e.getWidth() + e.getHeight()) / 4;
-				int distance = (int)(Math.sqrt(Math.pow(g.getX() - e.getX(), 2) + Math.pow(g.getY() - e.getY(), 2)));
-				if(towerRadius + enemyRadius >= distance) {
-					//TODO Trig calc stuff
-					int enemyX = e.getX(), enemyY = e.getY();
-					int towerX = g.getX() + g.getWidth() / 2, TowerY = g.getY() + g.getHeight() / 2;
+					if (t.getCooldown()) {
+					int towerRadius = t.getRadius();
+					int enemyRadius = e.getWidth() / 2;
+					int distance = (int)(Math.sqrt(Math.pow(g.getX() - e.getX(), 2) + Math.pow(g.getY() - e.getY(), 2)));
+					if(towerRadius + enemyRadius >= distance) {
+						//TODO Trig calc stuff
+						int enemyX = e.getX() + e.getWidth() / 2, enemyY = e.getY() + e.getHeight() / 2;
+						int towerX = g.getX() + g.getWidth() / 2, towerY = g.getY() + g.getHeight() / 2;
+						
+						Projectile p = t.getProjectile(e);
+						p.setBounds(towerX, towerY, p.getWidth(), p.getHeight());
+						this.add(p, 1);
+						projectiles.add(p);
+						t.setCooldown();
+					}
 				}
-				
 			}
 			
 		}
+		for (Grid g : towers) {
+			System.out.println(g + ": " + g.getTower().cooldown());
+		}
+		
 		for (Projectile p : projectiles) {
-			int xMod;
-			int yMod;
-			int px = p.getX(), py = p.getY();
-			int tx = p.getTarget().getX(), ty = p.getTarget().getY();
-			if (px < tx) {
-				xMod = 1;
-			} else {
-				xMod = -1;
+			p.move();
+			if (p.checkCollision()) {
+				this.remove(p);
+				p.setVisible(false);
 			}
-			if (py < ty) {
-				yMod = 1;
-			} else {
-				yMod = -1;
-			}
-			
 		}
+		for (int i = 0; i < projectiles.size(); i++) {
+			if (!projectiles.get(i).isVisible()) {
+				projectiles.remove(i);
+				i--;
+			}
+		}
+		
+		System.out.println(projectiles.size());
+		System.out.println("end of update");
 	}
 	
 	public void placeTower() {
