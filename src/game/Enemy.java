@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 
 public class Enemy extends JLabel {
 	private String dir;
+	private int attack;
 	private int health;
 	private double speed;
 	private double currentSpeed;
@@ -17,19 +18,25 @@ public class Enemy extends JLabel {
 	private int loc;
 	
 	public Enemy() {
+		attack = 2;
+		health = 9;
 		loc = -1;
-		speed = 3.5;
+		speed = 6;
 		dir = "up";
 		this.setSize(25, 25);
-		image = "src\\assets\\enemyTest.png";
+		image = "src\\assets\\enemyShield.png";
 	}
 	
 	public void hit(int damage) {
 		health -= damage;
-		
-		if (health <= damage) {
-			//TODO DO SOMETHING YOU IDIOT
-		}
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public int getAttack() {
+		return attack;
 	}
 	
 	public String getImage() {

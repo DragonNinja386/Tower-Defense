@@ -17,7 +17,9 @@ public class GamePanel extends JLayeredPane {
 	int[][] path;
 	private Grid[][] grid;
 	private Grid selectedGrid;
-	private MouseListener ml, towerML;
+	private MouseListener displayml, ml, towerML;
+	private Enemy selectedEnemy;
+	private Enemy attackingEnemy;
 	private Tower selectedTower;
 	
 	public GamePanel() {
@@ -63,12 +65,18 @@ public class GamePanel extends JLayeredPane {
 				};
 				towerML = new MouseListener() {
 					@Override
-					public void mouseClicked(MouseEvent arg0) {}
+					public void mouseClicked(MouseEvent arg0) {
+						Grid g = (Grid)arg0.getSource();
+						selectedTower = g.getTower();
+						GameControl.takeAction(Action.displayTower);
+					}
 
 					@Override
 					public void mouseEntered(MouseEvent arg0) {
 						Grid g = (Grid)arg0.getSource();
 						g.getRange().setVisible(true);
+						
+						
 					}
 
 					@Override
@@ -83,6 +91,25 @@ public class GamePanel extends JLayeredPane {
 					@Override
 					public void mouseReleased(MouseEvent arg0) {}
 				};
+				displayml = new MouseListener() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						GameControl.takeAction(Action.undisplay);
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent arg0) {}
+
+					@Override
+					public void mouseExited(MouseEvent arg0) {}
+
+					@Override
+					public void mousePressed(MouseEvent arg0) {}
+
+					@Override
+					public void mouseReleased(MouseEvent arg0) {}
+				};
+				grid[r][c].addMouseListener(displayml);
 				
 				this.add(grid[r][c], 2);
 			}
@@ -100,9 +127,19 @@ public class GamePanel extends JLayeredPane {
 					String image = "grass" + (int)(Math.random() * 3) + ".png";
 					grid[r][c].setImage("src\\assets\\" + image);
 				}
-				else {
-					//TODO display path tiles
-				}
+			}
+		}
+		
+		String currentDir = "up";
+		String imagePath = "src\\assets\\path_";
+		for (int i = 0; i < path.length; i++) {
+			//TODO display path tiles
+			if (grid[path[i][0]][path[i][1]].getDir() != null) {
+				currentDir += grid[path[i][0]][path[i][1]].getDir();
+				grid[path[i][0]][path[i][1]].setImage(imagePath + currentDir + ".png"); 
+				currentDir = grid[path[i][0]][path[i][1]].getDir();
+			} else {
+				grid[path[i][0]][path[i][1]].setImage(imagePath + currentDir + ".png"); 
 			}
 		}
 		
@@ -110,8 +147,20 @@ public class GamePanel extends JLayeredPane {
 		this.repaint();
 	}
 	
+	public Enemy getAttackingEnemy() {
+		return attackingEnemy;
+	}
+	
+	public Enemy getSelectedEnemy() {
+		return selectedEnemy;
+	}
+	
+	public Tower getSelectedTower() {
+		return selectedTower;
+	}
+	
 	private int[][] createPath() {
-		int[][] path = new int[14][2];
+		int[][] path = new int[28][2];
 		path[0][1] = 6;
 		path[0][0] = 8;
 		path[1][1] = 6;
@@ -144,14 +193,62 @@ public class GamePanel extends JLayeredPane {
 		grid[path[12][0]][path[12][1]].setDir("down");
 		path[13][1] = 3;
 		path[13][0] = 6;
+		path[14][1] = 3;
+		path[14][0] = 7;
+		grid[path[14][0]][path[14][1]].setDir("left");
+		path[15][1] = 2;
+		path[15][0] = 7;
+		path[16][1] = 1;
+		path[16][0] = 7;
+		grid[path[16][0]][path[16][1]].setDir("up");
+		path[17][1] = 1;
+		path[17][0] = 6;
+		path[18][1] = 1;
+		path[18][0] = 5;
+		path[19][1] = 1;
+		path[19][0] = 4;
+		path[20][1] = 1;
+		path[20][0] = 3;
+		path[21][1] = 1;
+		path[21][0] = 2;
+		grid[path[21][0]][path[21][1]].setDir("right");
+		path[22][1] = 2;
+		path[22][0] = 2;
+		path[23][1] = 3;
+		path[23][0] = 2;
+		path[24][1] = 4;
+		path[24][0] = 2;
+		path[25][1] = 5;
+		path[25][0] = 2;
+		grid[path[25][0]][path[25][1]].setDir("up");
+		path[26][1] = 5;
+		path[26][0] = 1;
+		path[27][1] = 5;
+		path[27][0] = 0;
+		
+
 		
 		return path;
 	}
 	
 	public void update() {
 		for (Enemy e : enemies) {
+			if (e.getHealth() <= 0) {
+				this.remove(e);
+				e.setVisible(false);
+				break;
+			}
 			e.move();
-			if (e.getGrid() != -1) {
+			if (e.getGrid() + 1 == path.length) {
+				if (e.getY() <= 0) {
+					attackingEnemy = e;
+					GameControl.takeAction(Action.attacked);
+					this.remove(e);
+					e.setVisible(false);
+					break;
+				}
+			}
+			else if (e.getGrid() != -1) {
 				Grid g = grid[path[e.getGrid()][0]][path[e.getGrid()][1]];
 				switch (e.getDir()) {
 					case "up":
@@ -215,7 +312,7 @@ public class GamePanel extends JLayeredPane {
 			
 		}
 		for (Grid g : towers) {
-			System.out.println(g + ": " + g.getTower().cooldown());
+			g.getTower().cooldown();
 		}
 		
 		for (Projectile p : projectiles) {
@@ -225,6 +322,12 @@ public class GamePanel extends JLayeredPane {
 				p.setVisible(false);
 			}
 		}
+		for (int i = 0; i < enemies.size(); i++) {
+			if (!enemies.get(i).isVisible()) {
+				enemies.remove(i);
+				i--;
+			}
+		}
 		for (int i = 0; i < projectiles.size(); i++) {
 			if (!projectiles.get(i).isVisible()) {
 				projectiles.remove(i);
@@ -232,11 +335,10 @@ public class GamePanel extends JLayeredPane {
 			}
 		}
 		
-		System.out.println(projectiles.size());
-		System.out.println("end of update");
 	}
 	
 	public void placeTower() {
+		selectedGrid.removeMouseListener(displayml);
 		selectedGrid.addMouseListener(towerML);
 		selectedGrid.intializeRange();
 		this.add(selectedGrid.getRange(), 1);

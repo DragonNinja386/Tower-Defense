@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
 public class Grid extends JButton {
+	private TowerRange range;
 	private String dir;
 	private Tower tower;
 	private boolean pathTile;
@@ -59,7 +60,7 @@ public class Grid extends JButton {
 	}
 	
 	public TowerRange getRange() {
-		return tower.getRange();
+		return range;
 	}
 	
 	public Tower getTower() {
@@ -79,7 +80,8 @@ public class Grid extends JButton {
 	}
 	
 	public void intializeRange() {
-		tower.getRange().setBounds(this.getX(), this.getY());
+		range = tower.getRange();
+		range.setBounds(this.getX(), this.getY());
 	}
 	
 	public void setTower(boolean isPlaced) {

@@ -19,7 +19,9 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 public class GameControl {
+	private boolean gameRunning;
 	private static Action currentAction;
+	private int health;
 	private int money;
 	private GamePanel gp;
 	private InfoPanel ip;
@@ -37,6 +39,9 @@ public class GameControl {
 		gp.spawnEnemy(new Enemy()); //TODO debug
 		
 		money = 100;
+		health = 10;
+		ip.setMoney(money);
+		ip.setHealth(health);
 		
 		currentAction = null;
 
@@ -54,6 +59,8 @@ public class GameControl {
 				//infoTick();
 				gp.revalidate();
 				gp.repaint();
+				ip.revalidate();
+				ip.repaint();
 			}
 		});
 		
@@ -79,10 +86,30 @@ public class GameControl {
 					if (money - buying >= 0) {
 						money -= buying;
 						gp.placeTower();
+						ip.setMoney(money);
 					} else {
 						tp.displayMessage("Not enough money!");
 					}
 					currentAction = Action.unplace;
+					break;
+				case attacked:
+					health -= gp.getAttackingEnemy().getAttack();
+					ip.setHealth(health);
+					if (health <= 0) {
+						currentAction = Action.end;
+					} else {
+						currentAction = null;
+					}
+					break;
+				case displayTower:
+					ip.displayTower(gp.getSelectedTower());
+					currentAction = null;
+				case undisplay:
+					ip.undisplay();
+					currentAction = null;
+				case end:
+					
+					currentAction = null;
 					break;
 				default:
 					break;
@@ -92,7 +119,7 @@ public class GameControl {
 	}
 
 	public void infoTick() {
-		ip.update();
+		
 	}
 
 	public static void takeAction(Action a) {

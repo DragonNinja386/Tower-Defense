@@ -23,17 +23,19 @@ public class Projectile extends JLabel {
 		super();
 		if (imagePath.indexOf("arrow") != -1) {
 			this.setSize(ARROW);
-			damage = 3;
 			speed = 10;
 		} else {
 			this.setSize(ARROW);
-			damage = 3;
 			speed = 10;
 			System.out.println("There has been a fatal error in which you should shout out, \"WHY ARE THE PROJECTILES BROKEN!?!?\"");
 		}
 		
 		target = t;
 		image = imagePath;
+	}
+	
+	public void setDamage(int d) {
+		damage = d;
 	}
 	
 	public void move() {
