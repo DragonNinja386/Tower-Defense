@@ -89,6 +89,9 @@ public class EnemyControl {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 					EnemyImage e = (EnemyImage)e.getSource();
+					if (costCount + e.cost <= costLimit) {
+						
+					}
 				}
 				@Override
 				public void mouseEntered(MouseEvent e) {}
@@ -131,5 +134,9 @@ public class EnemyControl {
 		panel.repaint();
 		mf.revalidate();
 		mf.repaint();
+	}
+	
+	private void addEnemy(EnemyImage e) {
+		//TODO code this later
 	}
 }
