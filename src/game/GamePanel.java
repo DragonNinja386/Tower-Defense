@@ -147,6 +147,10 @@ public class GamePanel extends JLayeredPane {
 		this.repaint();
 	}
 	
+	public boolean enemiesPresent() {
+		return enemies.size() > 0;
+	}
+	
 	public Enemy getAttackingEnemy() {
 		return attackingEnemy;
 	}
@@ -233,6 +237,25 @@ public class GamePanel extends JLayeredPane {
 	
 	public void update() {
 		for (Enemy e : enemies) {
+			if (e.getHeal()) {
+				for (Enemy e2 : enemies) {
+					if (e != e2) {
+						int distance = (int)(Math.sqrt(Math.pow(e2.getX() - e.getX(), 2) + Math.pow(e2.getY() - e.getY(), 2)));
+						if (distance < 25) {
+							e2.heal();
+						}
+					}
+				}
+			} else if (e.getShield()) {
+				for (Enemy e2 : enemies) {
+					if (e != e2) {
+						int distance = (int)(Math.sqrt(Math.pow(e2.getX() - e.getX(), 2) + Math.pow(e2.getY() - e.getY(), 2)));
+						if (distance < 75) {
+							e2.shield();
+						}
+					}
+				}
+			}
 			if (e.getHealth() <= 0) {
 				this.remove(e);
 				e.setVisible(false);
@@ -344,6 +367,11 @@ public class GamePanel extends JLayeredPane {
 		this.add(selectedGrid.getRange(), 1);
 		towers.add(selectedGrid);
 		selectedGrid.setTower(true);
+		for (Grid g : towers) {
+			System.out.println(g);
+			System.out.println(g.getTower());
+		}
+		System.out.println();
 	}
 	
 	public void placement() {
@@ -370,7 +398,7 @@ public class GamePanel extends JLayeredPane {
 	}
 	
 	public void selectTower(Tower t) {
-		selectedTower = t;
+		selectedTower = new Tower(t.getType());
 	}
 	
 	public void spawnEnemy(Enemy e) {

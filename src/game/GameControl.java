@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 public class GameControl {
-	private boolean gameRunning;
+	private static boolean waveEnded;
 	private static Action currentAction;
 	private int health;
 	private int money;
@@ -36,8 +36,6 @@ public class GameControl {
 		tp = new TowerPanel();
 		mf.setUpPanels(gp, ip, tp);
 		
-		gp.spawnEnemy(new Enemy()); //TODO debug
-		
 		money = 100;
 		health = 10;
 		ip.setMoney(money);
@@ -45,11 +43,14 @@ public class GameControl {
 		
 		currentAction = null;
 
-		gameTimer = new Timer(/*20*/100, new ActionListener() {
+		gameTimer = new Timer(20, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (!gp.enemiesPresent() && waveEnded) {
+					currentAction = Action.endWave;
+				}
 				tick();
-				
+				EnemyControl.tickCooldown();
 			}
 		});
 		
@@ -63,6 +64,8 @@ public class GameControl {
 				ip.repaint();
 			}
 		});
+		
+		waveEnded = false;
 		
 		uiTimer.start();
 		gameTimer.start();
@@ -111,6 +114,18 @@ public class GameControl {
 					
 					currentAction = null;
 					break;
+				case placeEnemy:
+					Enemy e = new Enemy(EnemyControl.getEnemy());
+					gp.spawnEnemy(e);
+					currentAction = null;
+					break;
+				case endWave:
+					waveEnded = false;
+					money += 15;
+					ip.setMoney(money);
+					EnemyControl.resetCost();
+					currentAction = null;
+					break;
 				default:
 					break;
 			}
@@ -124,5 +139,9 @@ public class GameControl {
 
 	public static void takeAction(Action a) {
 		currentAction = a;
+	}
+	
+	public static void endPlacement() {
+		waveEnded = true;
 	}
 }

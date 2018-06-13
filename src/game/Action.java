@@ -8,5 +8,8 @@ public enum Action {
 	end,
 	displayTower,
 	displayEnemy,
-	undisplay
+	undisplay,
+	placeEnemy,
+	endEnemyPlacement,
+	endWave,
 }

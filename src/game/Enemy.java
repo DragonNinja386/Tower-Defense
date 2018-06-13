@@ -16,19 +16,100 @@ public class Enemy extends JLabel {
 	private double currentSpeed;
 	private String image;
 	private int loc;
+	private int cooldown = 0;
 	
-	public Enemy() {
-		attack = 2;
-		health = 9;
+	private boolean heal = false;
+	private boolean shield = false;
+	private boolean dodge = false;
+	
+	
+	public Enemy(String type) {
+		switch (type) {
+			case "basic":
+				speed = 4;
+				attack = 1;
+				health = 22;
+				image = "src\\assets\\enemyBasic.png";
+				break;
+			case "fast":
+				speed = 10;
+				attack = 2;
+				health = 12;
+				image = "src\\assets\\enemyFast.png";
+				break;
+			case "heal":
+				speed = 2.5;
+				attack = 4;
+				health = 30;
+				heal = true;
+				image = "src\\assets\\enemyHeal.png";
+				break;
+			case "shield":
+				speed = 2.5;
+				attack = 4;
+				health = 30;
+				shield = true;
+				image = "src\\assets\\enemyShield.png";
+				break;
+			case "dodge":
+				speed = 3;
+				attack = 3;
+				health = 20;
+				dodge = true;
+				image = "src\\assets\\enemyDodge.png";
+				break;
+			case "boss":
+				speed = 1;
+				attack = 20;
+				health = 100;
+				shield = true;
+				heal = true;
+				image = "src\\assets\\enemyBoss.png";
+				break;
+		}
+
 		loc = -1;
-		speed = 6;
 		dir = "up";
 		this.setSize(25, 25);
-		image = "src\\assets\\enemyShield.png";
+		
+	}
+	
+	public boolean getShield() {
+		if (cooldown == 0) {
+			if (shield) {
+				cooldown = 30;
+			}
+			return shield;
+		}
+		return false;
+	}
+	
+	public boolean getHeal() {
+		if (cooldown == 0) {
+			if (heal) {
+				cooldown = 15;
+			}
+			return heal;
+		}
+		return false;
+	}
+	
+	public void heal() {
+		health += 3;
+	}
+	
+	public void shield() {
+		health += 2;
 	}
 	
 	public void hit(int damage) {
-		health -= damage;
+		if (dodge) {
+			if (Math.random() > 0.333) {
+				health -= damage;
+			}
+		} else {
+			health -= damage;
+		}
 	}
 	
 	public int getHealth() {
@@ -64,6 +145,9 @@ public class Enemy extends JLabel {
 	}
 	
 	public void move() {
+		if (cooldown > 0) {
+			cooldown--;
+		}
 		currentSpeed += speed;
 		if (dir != null) {
 			switch (dir) {

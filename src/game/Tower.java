@@ -12,20 +12,26 @@ public class Tower {
 	private int attack;
 	
 	private int cost;
+	private String type;
 	private String image;
 	
 	public Tower(String tower) {
 		switch (tower) {
 		case "Arrow":
-			attack = 3;
-			speed = 5;
+			type = "Arrow";
+			attack = 4;
+			speed = 10;
 			cooldown = 0;
 			cost = 25;
-			diameter = 7;
+			diameter = (int)(Math.random() * 4) + 3;
 			image = "src\\assets\\tower_arrow.png";
 			projectile = "src\\assets\\arrow.png";
 			break;
 		}
+	}
+	
+	public String getType() {
+		return type;
 	}
 	
 	public int getAttack() {

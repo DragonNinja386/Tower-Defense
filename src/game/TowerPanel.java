@@ -10,8 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import game.towers.*;
-
 public class TowerPanel extends JPanel {
 	private boolean placement;
 	private Tower current;
@@ -55,13 +53,7 @@ public class TowerPanel extends JPanel {
 		});
 		time.setInitialDelay(2000);
 		
-		JButton jb2 = new JButton("Frost");
-		jb2.setBounds(190, 35, 80, 80);
-		this.add(jb2);
 		
-		JButton jb3 = new JButton("Fire");
-		jb3.setBounds(280, 35, 80, 80);
-		this.add(jb3);
 		
 		towers = new Tower[4];
 		towers[0] = new Tower("Arrow");

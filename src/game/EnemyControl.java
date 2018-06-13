@@ -16,8 +16,10 @@ import javax.swing.JPanel;
 
 public class EnemyControl {
 	private class EnemyImage extends JLabel {
+		String enemy;
 		String imagePath;
 		int cost;
+		int cooldown;
 		double scale;
 		
 		@Override
@@ -40,19 +42,21 @@ public class EnemyControl {
 
 	}
 	
-	public MainFrame mf;
-	public JPanel panel;
+	private MainFrame mf;
+	private JPanel panel;
 	
-	public int costLimit;
-	public int costCount;
-	public boolean selectEnemy;
+	private static int costLimit;
+	private static int costCount;
+	private static String selectedEnemy;
+	private static int cooldown;
 	
-	public JLabel[] costLabel;
-	public EnemyImage[] enemyLabel;
-	public ArrayList<EnemyImage> lineUp;
+	private static JLabel costCountLabel;
+	private JLabel[] costLabel;
+	private EnemyImage[] enemyLabel;
 	
 	public EnemyControl() {
 		mf = new MainFrame();
+		mf.setTitle("Two Player Game");
 		mf.setSize(300, 600);
 
 		panel = new JPanel();
@@ -84,13 +88,54 @@ public class EnemyControl {
 		for (int i = 0; i < enemyLabel.length; i++) {
 			enemyLabel[i] = new EnemyImage();
 			enemyLabel[i].scale = 2;
-			costLabel[i].addMouseListener(new MouseListener() {
+			panel.add(enemyLabel[i]);
+		}
+		enemyLabel[0].setBounds(180,35,50,50);
+		enemyLabel[0].cost = 2;
+		enemyLabel[0].cooldown = 8;
+		enemyLabel[0].enemy = "basic";
+		enemyLabel[0].imagePath = "src//assets//enemyBasic.png";
+		enemyLabel[1].setBounds(50,35,50,50);
+		enemyLabel[1].cost = 1;
+		enemyLabel[1].cooldown = 5;
+		enemyLabel[1].enemy = "fast";
+		enemyLabel[1].imagePath = "src//assets//enemyFast.png";
+		enemyLabel[2].setBounds(180,110,50,50);
+		enemyLabel[2].cost = 4;
+		enemyLabel[2].cooldown = 15;
+		enemyLabel[2].enemy = "shield";
+		enemyLabel[2].imagePath = "src//assets//enemyShield.png";
+		enemyLabel[3].setBounds(50,110,50,50);
+		enemyLabel[3].cost = 5;
+		enemyLabel[3].cooldown = 15;
+		enemyLabel[3].enemy = "heal";
+		enemyLabel[3].imagePath = "src//assets//enemyHeal.png";
+		enemyLabel[4].setBounds(180,185,50,50);
+		enemyLabel[4].cost = 3;
+		enemyLabel[4].cooldown = 10;
+		enemyLabel[4].enemy = "dodge";
+		enemyLabel[4].imagePath = "src//assets//enemyDodge.png";
+		enemyLabel[5].setBounds(50,185,50,50);
+		enemyLabel[5].cost = 20;
+		enemyLabel[5].cooldown = 25;
+		enemyLabel[5].enemy = "boss";
+		enemyLabel[5].imagePath = "src//assets//enemyBoss.png";
+		for (EnemyImage el : enemyLabel) {
+			el.addMouseListener(new MouseListener() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					// TODO Auto-generated method stub
-					EnemyImage e = (EnemyImage)e.getSource();
-					if (costCount + e.cost <= costLimit) {
-						
+						if (cooldown == 0) {
+						// TODO Auto-generated method stub
+						EnemyImage enemy = (EnemyImage)e.getSource();
+						if (costCount + enemy.cost <= costLimit) {
+							costCount += enemy.cost;
+							addEnemy(enemy.enemy);
+							cooldown = enemy.cooldown;
+							costCountLabel.setText(costCount + "/" + costLimit);
+							if (costCount == costLimit) {
+								endPlacement();
+							}
+						}
 					}
 				}
 				@Override
@@ -102,33 +147,15 @@ public class EnemyControl {
 				@Override
 				public void mouseReleased(MouseEvent e) {}
 			});
-			panel.add(enemyLabel[i]);
 		}
-		enemyLabel[0].setBounds(180,35,50,50);
-		enemyLabel[0].cost = 2;
-		enemyLabel[0].imagePath = "src//assets//enemyBasic.png";
-		enemyLabel[1].setBounds(50,35,50,50);
-		enemyLabel[1].cost = 1;
-		enemyLabel[1].imagePath = "src//assets//enemyFast.png";
-		enemyLabel[2].setBounds(180,110,50,50);
-		enemyLabel[2].cost = 4;
-		enemyLabel[2].imagePath = "src//assets//enemyShield.png";
-		enemyLabel[3].setBounds(50,110,50,50);
-		enemyLabel[3].cost = 5;
-		enemyLabel[3].imagePath = "src//assets//enemyHeal.png";
-		enemyLabel[4].setBounds(180,185,50,50);
-		enemyLabel[4].cost = 3;
-		enemyLabel[4].imagePath = "src//assets//enemyDodge.png";
-		enemyLabel[5].setBounds(50,185,50,50);
-		enemyLabel[5].cost = 20;
-		enemyLabel[5].imagePath = "src//assets//enemyBoss.png";
 		
+		cooldown = 0;
+		costLimit = 14;
+		costCount = 0;
 		
-		costCount = 14;
-		
-		lineUp = new ArrayList<>();
-		
-		selectEnemy = true;
+		costCountLabel = new JLabel(0 + "/" + costLimit);
+		costCountLabel.setBounds(5, 5, 100, 30);
+		panel.add(costCountLabel);
 		
 		panel.revalidate();
 		panel.repaint();
@@ -136,7 +163,28 @@ public class EnemyControl {
 		mf.repaint();
 	}
 	
-	private void addEnemy(EnemyImage e) {
-		//TODO code this later
+	public static void tickCooldown() {
+		if (cooldown > 0) {
+			cooldown--;
+		}
+	}
+	
+	public static void resetCost() {
+		costCount = 0;
+		costLimit += 4;
+		costCountLabel.setText(0 + "/" + costLimit);
+	}
+	
+	public static String getEnemy() {
+		return selectedEnemy;
+	}
+	
+	private void endPlacement() {
+		GameControl.endPlacement();
+	}
+	
+	private void addEnemy(String e) {
+		selectedEnemy = e;
+		GameControl.takeAction(Action.placeEnemy);
 	}
 }
