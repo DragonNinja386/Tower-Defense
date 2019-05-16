@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -125,21 +126,24 @@ public class GamePanel extends JLayeredPane {
 			for (int c = 0; c < grid[0].length; c++) {
 				if (!grid[r][c].getPath()) {
 					String image = "grass" + (int)(Math.random() * 3) + ".png";
-					grid[r][c].setImage("src\\assets\\" + image);
+					URL imgURL = GamePanel.class.getResource("/assets/" + image);
+					grid[r][c].setImage(imgURL);
 				}
 			}
 		}
 		
 		String currentDir = "up";
-		String imagePath = "src\\assets\\path_";
+		String imagePath = "/assets/path_";
 		for (int i = 0; i < path.length; i++) {
 			//TODO display path tiles
 			if (grid[path[i][0]][path[i][1]].getDir() != null) {
 				currentDir += grid[path[i][0]][path[i][1]].getDir();
-				grid[path[i][0]][path[i][1]].setImage(imagePath + currentDir + ".png"); 
+				URL imgURL1 = GamePanel.class.getResource(imagePath + currentDir + ".png");
+				grid[path[i][0]][path[i][1]].setImage(imgURL1); 
 				currentDir = grid[path[i][0]][path[i][1]].getDir();
 			} else {
-				grid[path[i][0]][path[i][1]].setImage(imagePath + currentDir + ".png"); 
+				URL imgURL1 = GamePanel.class.getResource(imagePath + currentDir + ".png");
+				grid[path[i][0]][path[i][1]].setImage(imgURL1); 
 			}
 		}
 		

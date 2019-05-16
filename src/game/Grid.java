@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -16,8 +17,8 @@ public class Grid extends JButton {
 	private Tower tower;
 	private boolean pathTile;
 	private boolean towerPlace;
-	private String imagePathTile;
-	private String imagePath;
+	private URL imagePathTile;
+	private URL imagePath;
 	private MouseListener ml;
 	
 	public Grid(String s) {
@@ -100,8 +101,8 @@ public class Grid extends JButton {
 		}
 	}
 	
-	public void setImage(String s) {
-		imagePathTile = s;
+	public void setImage(URL imgURL) {
+		imagePathTile = imgURL;
 		imagePath = imagePathTile;
 	}
 	
@@ -125,10 +126,9 @@ public class Grid extends JButton {
 	@Override
 	protected void paintComponent(Graphics g) {
 		if (imagePath != null) {
-			File file = new File(imagePath);
 			Image image = null;
 			try {
-				image = ImageIO.read(file);
+				image = ImageIO.read(imagePath);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

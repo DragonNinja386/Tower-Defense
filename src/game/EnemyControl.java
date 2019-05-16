@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -17,7 +18,7 @@ import javax.swing.JPanel;
 public class EnemyControl {
 	private class EnemyImage extends JLabel {
 		String enemy;
-		String imagePath;
+		URL imagePath;
 		int cost;
 		int cooldown;
 		double scale;
@@ -25,10 +26,9 @@ public class EnemyControl {
 		@Override
 		protected void paintComponent(Graphics g) {
 			if (imagePath != null) {
-				File file = new File(imagePath);
 				Image image = null;
 				try {
-					image = ImageIO.read(file);
+					image = ImageIO.read(imagePath);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -94,32 +94,32 @@ public class EnemyControl {
 		enemyLabel[0].cost = 2;
 		enemyLabel[0].cooldown = 8;
 		enemyLabel[0].enemy = "basic";
-		enemyLabel[0].imagePath = "src//assets//enemyBasic.png";
+		enemyLabel[0].imagePath = EnemyControl.class.getResource("/assets/enemyBasic.png");
 		enemyLabel[1].setBounds(50,35,50,50);
 		enemyLabel[1].cost = 1;
 		enemyLabel[1].cooldown = 5;
 		enemyLabel[1].enemy = "fast";
-		enemyLabel[1].imagePath = "src//assets//enemyFast.png";
+		enemyLabel[1].imagePath = EnemyControl.class.getResource("/assets/enemyFast.png");
 		enemyLabel[2].setBounds(180,110,50,50);
 		enemyLabel[2].cost = 4;
 		enemyLabel[2].cooldown = 15;
 		enemyLabel[2].enemy = "shield";
-		enemyLabel[2].imagePath = "src//assets//enemyShield.png";
+		enemyLabel[2].imagePath = EnemyControl.class.getResource("/assets/enemyShield.png");
 		enemyLabel[3].setBounds(50,110,50,50);
 		enemyLabel[3].cost = 5;
 		enemyLabel[3].cooldown = 15;
 		enemyLabel[3].enemy = "heal";
-		enemyLabel[3].imagePath = "src//assets//enemyHeal.png";
+		enemyLabel[3].imagePath = EnemyControl.class.getResource("/assets/enemyHeal.png");
 		enemyLabel[4].setBounds(180,185,50,50);
 		enemyLabel[4].cost = 3;
 		enemyLabel[4].cooldown = 10;
 		enemyLabel[4].enemy = "dodge";
-		enemyLabel[4].imagePath = "src//assets//enemyDodge.png";
+		enemyLabel[4].imagePath = EnemyControl.class.getResource("/assets/enemyDodge.png");
 		enemyLabel[5].setBounds(50,185,50,50);
 		enemyLabel[5].cost = 20;
 		enemyLabel[5].cooldown = 25;
 		enemyLabel[5].enemy = "boss";
-		enemyLabel[5].imagePath = "src//assets//enemyBoss.png";
+		enemyLabel[5].imagePath = EnemyControl.class.getResource("/assets/enemyBoss.png");
 		for (EnemyImage el : enemyLabel) {
 			el.addMouseListener(new MouseListener() {
 				@Override

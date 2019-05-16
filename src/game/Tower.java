@@ -1,11 +1,12 @@
 package game;
 
 import java.awt.Graphics2D;
+import java.net.URL;
 
 import javax.swing.JLabel;
 
 public class Tower {
-	private String projectile;
+	private URL projectile;
 	private int diameter;
 	private int speed;
 	private int cooldown;
@@ -13,7 +14,7 @@ public class Tower {
 	
 	private int cost;
 	private String type;
-	private String image;
+	private URL image;
 	
 	public Tower(String tower) {
 		switch (tower) {
@@ -24,8 +25,8 @@ public class Tower {
 			cooldown = 0;
 			cost = 25;
 			diameter = (int)(Math.random() * 4) + 3;
-			image = "src\\assets\\tower_arrow.png";
-			projectile = "src\\assets\\arrow.png";
+			image = Tower.class.getResource("/assets/tower_arrow.png");
+			projectile = Tower.class.getResource("/assets/arrow.png");
 			break;
 		}
 	}
@@ -75,7 +76,7 @@ public class Tower {
 		return cost;
 	}
 	
-	public String getImagePath() {
+	public URL getImagePath() {
 		return image;
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
@@ -14,7 +15,7 @@ public class Enemy extends JLabel {
 	private int health;
 	private double speed;
 	private double currentSpeed;
-	private String image;
+	private URL image;
 	private int loc;
 	private int cooldown = 0;
 	
@@ -29,34 +30,34 @@ public class Enemy extends JLabel {
 				speed = 4;
 				attack = 1;
 				health = 22;
-				image = "src\\assets\\enemyBasic.png";
+				image = Enemy.class.getResource("/assets/enemyBasic.png");
 				break;
 			case "fast":
 				speed = 10;
 				attack = 2;
 				health = 12;
-				image = "src\\assets\\enemyFast.png";
+				image = Enemy.class.getResource("/assets/enemyFast.png");
 				break;
 			case "heal":
 				speed = 2.5;
 				attack = 4;
 				health = 30;
 				heal = true;
-				image = "src\\assets\\enemyHeal.png";
+				image = Enemy.class.getResource("/assets/enemyHeal.png");
 				break;
 			case "shield":
 				speed = 2.5;
 				attack = 4;
 				health = 30;
 				shield = true;
-				image = "src\\assets\\enemyShield.png";
+				image = Enemy.class.getResource("/assets/enemyShield.png");
 				break;
 			case "dodge":
 				speed = 3;
 				attack = 3;
 				health = 20;
 				dodge = true;
-				image = "src\\assets\\enemyDodge.png";
+				image = Enemy.class.getResource("/assets/enemyDodge.png");
 				break;
 			case "boss":
 				speed = 1;
@@ -64,7 +65,7 @@ public class Enemy extends JLabel {
 				health = 100;
 				shield = true;
 				heal = true;
-				image = "src\\assets\\enemyBoss.png";
+				image = Enemy.class.getResource("/assets/enemyBoss.png");
 				break;
 		}
 
@@ -120,7 +121,7 @@ public class Enemy extends JLabel {
 		return attack;
 	}
 	
-	public String getImage() {
+	public URL getImage() {
 		return image;
 	}
 	
@@ -181,15 +182,14 @@ public class Enemy extends JLabel {
 	
 	@Override
 	protected void paintComponent(Graphics g) {
-			File file = new File(image);
-			Image image = null;
+			Image image2 = null;
 			try {
-				image = ImageIO.read(file);
+				image2 = ImageIO.read(image);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
 		    super.paintComponent(g);
-		    g.drawImage(image, 0, 0, null);
+		    g.drawImage(image2, 0, 0, null);
 	}
 }

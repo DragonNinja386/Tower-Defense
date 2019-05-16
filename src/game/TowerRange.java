@@ -5,18 +5,19 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 public class TowerRange extends JLabel {
-	private String imagePath;
+	private URL imagePath;
 	private int diameter;
 	
 	public TowerRange(int d) {
 		super();
 		diameter = d;
-		imagePath = "src\\assets\\range.png";
+		imagePath = TowerRange.class.getResource("/assets/range.png");
 	}
 	
 	/**
@@ -33,10 +34,9 @@ public class TowerRange extends JLabel {
 	@Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-		File file = new File(imagePath);
 		Image image = null;
 		try {
-			image = ImageIO.read(file);
+			image = ImageIO.read(imagePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

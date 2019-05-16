@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
@@ -13,25 +14,19 @@ import javax.swing.JLabel;
 public class Projectile extends JLabel {
 	private static final Dimension ARROW = new Dimension(40,40);
 	
-	private String image;
+	private URL image;
 	private Enemy target;
 	private double speed;
 	private double currentSpeed;
 	private int damage;
 	
-	public Projectile(String imagePath, Enemy t) {
+	public Projectile(URL projectile, Enemy t) {
 		super();
-		if (imagePath.indexOf("arrow") != -1) {
-			this.setSize(ARROW);
-			speed = 10;
-		} else {
-			this.setSize(ARROW);
-			speed = 10;
-			System.out.println("There has been a fatal error in which you should shout out, \"WHY ARE THE PROJECTILES BROKEN!?!?\"");
-		}
+		this.setSize(ARROW);
+		speed = 10;
 		
 		target = t;
-		image = imagePath;
+		image = projectile;
 	}
 	
 	public void setDamage(int d) {
@@ -65,7 +60,7 @@ public class Projectile extends JLabel {
 		}
 	}
 	
-	public String getImagePath() {
+	public URL getImagePath() {
 		return image;
 	}
 	
@@ -91,17 +86,16 @@ public class Projectile extends JLabel {
 	@Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-		File file = new File(image);
-		Image image = null;
+		Image image2 = null;
 		try {
-			image = ImageIO.read(file);
+			image2 = ImageIO.read(image);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
         Graphics2D g2d = (Graphics2D)g;
         g2d.rotate(Math.toRadians(90), this.getWidth() / 2, this.getHeight() / 2);
-        g2d.drawImage(image,0,0,null);
+        g2d.drawImage(image2,0,0,null);
         
 	}
 }
